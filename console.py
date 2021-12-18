@@ -39,13 +39,16 @@ class HBNBCommand(cmd.Cmd):
             n_class = HBNBCommand.classes[arg_list[0]]()
             print(n_class.id)
             storage.new(n_class)
-
             if len(arg_list) > 1:
                 for elements in arg_list[1:]:
                     try:
                         attr = elements.split("=")
+                        if "_" in attr[1]:
+                            attr[1] = attr.replace("_", " ")
+
                         for instance in storage.all().values():
                             if n_class.id == instance.id:
+                                print(attr)
                                 setattr(instance, attr[0], attr[1].strip('"'))
                     except:
                         continue
