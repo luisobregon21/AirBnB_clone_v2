@@ -32,27 +32,32 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         '''Creates an instance of the specified class\n'''
-        arg_list = args.split(" ", 1)
+        arg_list = args.split(" ")
+        class_name = arg_list[0]
         if len(args) == 0:
             print("** class name missing **")
-        elif arg_list[0] in HBNBCommand.classes:
-            n_class = HBNBCommand.classes[arg_list[0]]()
-            print(n_class.id)
+        elif class_name in HBNBCommand.classes:
+            n_class = HBNBCommand.classes[class_name]()
             storage.new(n_class)
             if len(arg_list) > 1:
                 for elements in arg_list[1:]:
+                    attr_name, val = elements.split("=")
+                    if val == '':
+                        continue
+                    if val[0] == '"' and val[len(val)-1] == '"':
+                        val = val.strip('"')
+                        val = val.replace('_', ' ')
+                        val = val.replace('"', '\"')
+                        print("WE ARE HERE:", attr_name, val)
                     try:
-                        attr = elements.split("=")
-                        if "_" in attr[1]:
-                            attr[1] = attr.replace("_", " ")
-
                         for instance in storage.all().values():
                             if n_class.id == instance.id:
-                                print(attr)
-                                setattr(instance, attr[0], attr[1].strip('"'))
+                                setattr(instance, attr_name, val.strip('"'))
                     except:
                         continue
             storage.save()
+            print(n_class.id)
+
         else:
             print("** class doesn't exist **")
 
