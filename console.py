@@ -30,6 +30,60 @@ class HBNBCommand(cmd.Cmd):
              'latitude': float, 'longitude': float
             }
 
+    def do_create(self, args):
+        '''Creates an instance of the specified class\n'''
+        arg_list = args.split(" ", 1)
+        if len(args) == 0:
+            print("** class name missing **")
+        elif arg_list[0] in HBNBCommand.classes:
+            n_class = HBNBCommand.classes[arg_list[0]]()
+            print(n_class.id)
+            storage.new(n_class)
+
+            if len(arg_list) > 1:
+                for elements in arg_list[1:]:
+                    try:
+                        attr = elements.split("=")
+                        for instance in storage.all().values():
+                            if n_class.id == instance.id:
+                                setattr(instance, attr[0], attr[1].strip('"'))
+                    except:
+                        continue
+            storage.save()
+        else:
+            print("** class doesn't exist **")
+
+    def default(self, arg):
+        '''Runs class commands: <class name>.command()'''
+        arg_list = arg.split('.')
+        if len(arg_list) < 2:
+            print("*** Unknown Syntax", arg)
+            return
+        else:
+            if arg_list[0] in HBNBCommand.classes:
+                if arg_list[1] == "all()":
+                    self.do_all(arg_list[0])
+                elif arg_list[1] == "count()":
+                    self.do_count(arg_list[0])
+                elif arg_list[1][0:4] == "show":
+                    if len(arg_list[1]) > 6:
+                        try:
+                            self.do_show(arg_list[0] + " " + arg_list[1][5:-1])
+                        except:
+                            print("** no instance found **")
+                    else:
+                        print("** instance id missing **")
+                elif arg_list[1][0:7] == "destroy":
+                    if len(arg_list[1]) > 9:
+                        try:
+                            self.do_destroy(arg_list[0] + " " +
+                                            arg_list[1][8:-1])
+                        except:
+                            print("** no instance found **")
+                    else:
+                        print("** instance id missing **")
+
+
     def preloop(self):
         """Prints if isatty is false"""
         if not sys.__stdin__.isatty():
@@ -73,7 +127,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] =='}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -112,19 +166,6 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
-
-    def do_create(self, args):
-        """ Create an object of any class"""
-        if not args:
-            print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -272,7 +313,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '\"':  # check for quoted arg
+            if args and args[0] == '\"':  # check for quoted arg
                 second_quote = args.find('\"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
@@ -280,10 +321,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(' ')
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not ' ':
+            if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '\"':
+            if args[2] and args[2][0] == '\"':
                 att_val = args[2][1:args[2].find('\"', 1)]
 
             # if att_val was not quoted arg
