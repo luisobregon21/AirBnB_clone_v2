@@ -19,16 +19,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def do_create(self, args):
         '''Creates an instance of the specified class\n'''
@@ -48,11 +48,15 @@ class HBNBCommand(cmd.Cmd):
                         val = val.strip('"')
                         val = val.replace('_', ' ')
                         val = val.replace('"', '\"')
-                        print("WE ARE HERE:", attr_name, val)
+                        # print("WE ARE HERE:", attr_name, val)
+                    elif("." in val):
+                        val = float(val)
+                    else:
+                        val = int(val)
                     try:
                         for instance in storage.all().values():
                             if n_class.id == instance.id:
-                                setattr(instance, attr_name, val.strip('"'))
+                                setattr(instance, attr_name, val)
                     except:
                         continue
             storage.save()
@@ -90,7 +94,6 @@ class HBNBCommand(cmd.Cmd):
                             print("** no instance found **")
                     else:
                         print("** instance id missing **")
-
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -135,7 +138,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] =='}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -368,6 +371,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
