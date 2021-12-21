@@ -13,10 +13,10 @@ from models.review import Review
 import os
 
 hbnb_classes = {
-                'BaseModel': BaseModel, 'City': City,
-                'User': User, 'Place': Place, 'State': State,
-                'Amenity': Amenity, 'Review': Review
-                }
+    'BaseModel': BaseModel, 'City': City,
+    'User': User, 'Place': Place, 'State': State,
+    'Amenity': Amenity, 'Review': Review
+}
 
 
 class DBStorage:
@@ -37,27 +37,23 @@ class DBStorage:
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
-
     def all(self, cls=None):
         '''
         query on the current database session
         all objects depending of the class name
         '''
-        session_dic = {}
-
-        ''' 
-        NOTE: The all I think is working but it's mot saving
-        the database
-        '''
-
-        if cls in hbnb_classes.values():
-            for obj in self.__session.query(cls).all():
-                session_dic[obj.__class__.__name__ + "." + obj.id] = obj
+        newdict = {}
+        if cls is not None:
+            query = self.__session.query(cls).all()
+            for obj in query:
+                newdict[cls + "." + obj.id] = obj
         else:
-            for cls in hbnb_classes.values():
-                for obj in self.__session.query(cls):
-                    session_dic[obj.__class__.__name__ + "." + obj.id] = obj
-        return session_dic
+            for key, value in hbnb_classes.items():
+                query = self.__session.query(value).all()
+                for obj in query:
+                    newdict[key + "." + obj.id] = obj
+
+        return newdict
 
     def new(self, obj):
         ''' add the object to the current database session '''
