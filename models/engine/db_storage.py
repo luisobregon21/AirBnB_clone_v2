@@ -42,7 +42,6 @@ class DBStorage:
         query on the current database session
         all objects depending of the class name
         '''
-        print(cls)
         newdict = {}
         if cls is not None:
             query = self.__session.query(cls).all()
