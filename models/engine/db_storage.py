@@ -13,7 +13,8 @@ from models.state import State
 from models.review import Review
 
 
-hbnb_classes = {'BaseModel': BaseModel, 'City': City,
+hbnb_classes = {
+                'BaseModel': BaseModel, 'City': City,
                 'User': User, 'Place': Place, 'State': State,
                 'Amenity': Amenity, 'Review': Review
                 }
@@ -37,28 +38,31 @@ class DBStorage:
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
+
     def all(self, cls=None):
         '''
         query on the current database session
         all objects depending of the class name
         '''
         session_dic = {}
-        query = []
 
-        if cls is None:
-            for cls in hbnb_classes:
-                query += self.__session.query(cls)
+        ''' 
+        NOTE: The all I think is working but it's mot saving
+        the database
+        '''
+
+        if cls in hbnb_classes.values():
+            for obj in self.__session.query(cls).all():
+                session_dic[obj.__class__.__name__ + "." + obj.id] = obj
         else:
-            query = self.__session.query(cls)
-
-        for obj in query:
-            session_dic[obj.__name__ + '.' + obj.id] = obj
+            for cls in hbnb_classes.values():
+                for obj in self.__session.query(cls):
+                    session_dic[obj.__class__.__name__ + "." + obj.id] = obj
         return session_dic
 
     def new(self, obj):
         ''' add the object to the current database session '''
-        if obj is not None:
-            self.__session.add(obj)
+        self.__session.add(obj)
 
     def delete(self, obj=None):
         ''' delete from the current database session obj if not None '''
@@ -72,7 +76,7 @@ class DBStorage:
     def reload(self):
         ''' create all tables in the database (feature of SQLAlchemy) '''
         Base.metadata.create_all(self.__engine)
-
+        print("WHATS UP????\n\n")
         # creates a new session
         s_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         # creates a new object
