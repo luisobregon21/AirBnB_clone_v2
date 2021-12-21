@@ -76,7 +76,6 @@ class DBStorage:
     def reload(self):
         ''' create all tables in the database (feature of SQLAlchemy) '''
         Base.metadata.create_all(self.__engine)
-        print("WHATS UP????\n\n")
         # creates a new session
         s_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         # creates a new object
