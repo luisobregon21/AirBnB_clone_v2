@@ -1,13 +1,7 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-from sqlalchemy.orm.relationships import foreign
-from sqlalchemy.sql.elements import CollationClause
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
-from sqlalchemy.orm import relationship
-import models
-from models.city import City
-from os import getenv
+from sqlalchemy import Column, Integer, String, Float
 
 
 class Place(BaseModel, Base):
@@ -23,4 +17,3 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float)
     longitude = Column(Float)
-    amenity_ids = []
