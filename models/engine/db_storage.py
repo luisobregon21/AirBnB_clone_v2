@@ -3,7 +3,6 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from os import getenv
 from models.base_model import BaseModel, Base
 from models.user import User
 from models.place import Place
@@ -11,7 +10,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.state import State
 from models.review import Review
-
+import os
 
 hbnb_classes = {
                 'BaseModel': BaseModel, 'City': City,
@@ -27,15 +26,15 @@ class DBStorage:
 
     def __init__(self):
         ''' DataBase Storage Constructor '''
-        user = getenv('HBNB_MYSQL_USER')
-        passwd = getenv('HBNB_MYSQL_PWD')
-        host = getenv('HBNB_MYSQL_HOST')
-        db = getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
+        user = os.getenv('HBNB_MYSQL_USER')
+        passwd = os.getenv('HBNB_MYSQL_PWD')
+        host = os.getenv('HBNB_MYSQL_HOST')
+        db = os.getenv('HBNB_MYSQL_DB')
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(user, passwd, host, db),
                                       pool_pre_ping=True)
 
-        if getenv('HBNB_ENV') == 'test':
+        if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
 
