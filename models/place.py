@@ -3,6 +3,10 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from models.city import City
+from models.review import Review
+import os
+import models
+from sqlalchemy.orm import relationship
 
 
 class Place(BaseModel, Base):
@@ -18,3 +22,13 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float)
     longitude = Column(Float)
+    if os.getenv("HBNB_TYPE_STORAGE") is "file":
+        @property
+        def reviews(self):
+            placereviews = []
+            for review in models.storage.all(Review).values():
+                if self.id == review:
+                    placereviews.append(review)
+            return placereviews
+    else:
+        reviews = relationship("Review", backref="place", cascade='delete')
