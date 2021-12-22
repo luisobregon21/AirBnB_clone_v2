@@ -37,6 +37,9 @@ class Place(BaseModel, Base):
     if os.getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref='place',
                                cascade='all, delete, delete-orphan')
+        amenities = relationship("Amenity", secondary='place_amenity',
+                                 viewonly=False,
+                                 cascade='all, delete, delete-orphan')
     else:
         @property
         def reviews(self):
@@ -47,3 +50,14 @@ class Place(BaseModel, Base):
                 if self.id == reviews.place_id:
                     reviewlist.append(reviews)
             return reviewlist
+
+        @property
+        def amenities(self):
+            """return list of Review instances with place_id
+            equals to self.id(Place instance)"""
+            reviewlist = []
+            for reviews in models.storage.all(Review).values():
+                if self.id == reviews.place_id:
+                    reviewlist.append(reviews)
+            return reviewlist
+
