@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
+import os
+import models
+from models.review import Review
 from models.base_model import BaseModel, Base
 from sqlalchemy import ForeignKey, String, Float, Column, Integer
+from sqlalchemy.orm import relationship
 
 
 class Place(BaseModel, Base):
@@ -18,4 +22,17 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    reviews = relationship("Review", backref='place',
+                           cascade="all, delete, delete-orphan")
     amenity_ids = []
+
+    if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+        @property
+        def reviews(self):
+            """return list of Review instances with place_id
+            equals to self.id(Place instance)"""
+            reviewlist = []
+            for reviews in models.storage.all(Review).values():
+                if self.id == reviews.place_id:
+                    reviewlist.append(reviews)
+            return reviewlist
