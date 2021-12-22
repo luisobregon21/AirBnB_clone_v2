@@ -42,21 +42,18 @@ class DBStorage:
         query on the current database session
         all objects depending of the class name
         '''
-        # newdict = {}
-        print("JODER")
-        print(cls)
-        cls_dict = {}
-        statequery = self.__session.query(State).all()
-        statequery.extend(self.__session.query(City).all())
-        statequery.extend(self.__session.query(User).all())
-        statequery.extend(self.__session.query(Amenity).all())
-        statequery.extend(self.__session.query(Review).all())
-        statequery.extend(self.__session.query(Place).all())
-        print("after multi query")
-        for state in statequery:
-            print(state)
+        newdict = {}
+        if cls:
+            query = self.__session.query(cls).all()
+            for obj in query:
+                newdict[cls + "." + obj.id] = obj
+        else:
+            for key, value in hbnb_classes.items():
+                query = self.__session.query(value).all()
+                for obj in query:
+                    newdict[key + "." + obj.id] = obj
 
-        return
+        return newdict
 
     def new(self, obj):
         ''' add the object to the current database session '''
