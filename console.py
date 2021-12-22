@@ -41,8 +41,6 @@ class HBNBCommand(cmd.Cmd):
             if len(arg_list) > 1:
                 for elements in arg_list[1:]:
                     attr_name, val = elements.split("=")
-                    print(attr_name)
-                    print(val)
                     if val == '':
                         continue
                     if val[0] == '"' and val[len(val)-1] == '"':
@@ -53,7 +51,6 @@ class HBNBCommand(cmd.Cmd):
                         val = float(val)
                     else:
                         val = int(val)
-                    print(attr_name)
                     setattr(tmp_new_obj, attr_name, val)
             storage.new(tmp_new_obj)
             print(tmp_new_obj.id)
