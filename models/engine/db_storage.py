@@ -12,18 +12,19 @@ from models.state import State
 from models.review import Review
 import os
 
-hbnb_classes = {
-    'BaseModel': BaseModel, 'City': City,
-    'User': User, 'Place': Place, 'State': State,
-    'Amenity': Amenity, 'Review': Review
-}
+
 
 
 class DBStorage:
     ''' Database storage class '''
     __engine = None
     __session = None
-
+    hbnb_classes = {
+        #'BaseModel': BaseModel,
+        'City': City, 'User': User,
+        'Place': Place, 'State': State,
+        #'Amenity': Amenity, 'Review': Review
+    }
     def __init__(self):
         ''' DataBase Storage Constructor '''
         user = os.getenv('HBNB_MYSQL_USER')
@@ -48,8 +49,11 @@ class DBStorage:
             for obj in query:
                 newdict[cls + "." + obj.id] = obj
         else:
-            for key, value in hbnb_classes.items():
-                query = self.__session.query(value).all()
+            for key, value in self.hbnb_classes.items():
+                try:
+                    query = self.__session.query(value).all()
+                except:
+                    pass
                 for obj in query:
                     newdict[key + "." + obj.id] = obj
 
