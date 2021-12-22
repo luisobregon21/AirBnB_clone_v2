@@ -37,30 +37,27 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif class_name in HBNBCommand.classes:
-            n_class = HBNBCommand.classes[class_name]()
-            storage.new(n_class)
+            tmp_new_obj = eval(class_name)()
             if len(arg_list) > 1:
                 for elements in arg_list[1:]:
                     attr_name, val = elements.split("=")
+                    print(attr_name)
+                    print(val)
                     if val == '':
                         continue
                     if val[0] == '"' and val[len(val)-1] == '"':
                         val = val.strip('"')
                         val = val.replace('_', ' ')
                         val = val.replace('"', '\"')
-                        # print("WE ARE HERE:", attr_name, val)
                     elif("." in val):
                         val = float(val)
                     else:
                         val = int(val)
-                    try:
-                        for instance in storage.all().values():
-                            if n_class.id == instance.id:
-                                setattr(instance, attr_name, val)
-                    except:
-                        continue
+                    print(attr_name)
+                    setattr(tmp_new_obj, attr_name, val)
+            storage.new(tmp_new_obj)
+            print(tmp_new_obj.id)
             storage.save()
-            print(n_class.id)
 
         else:
             print("** class doesn't exist **")
