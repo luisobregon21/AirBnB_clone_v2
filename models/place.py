@@ -2,6 +2,7 @@
 """ Place Module for HBNB project """
 import os
 import models
+from models.review import Review
 from models.base_model import BaseModel, Base
 from sqlalchemy import ForeignKey, String, Float, Column, Integer
 from sqlalchemy.orm import relationship
@@ -29,12 +30,10 @@ class Place(BaseModel, Base):
     else:
         @property
         def reviews(self):
-            """
-            Retrieves the reviews associated with a Place
-            """
+            """return list of Review instances with place_id
+            equals to self.id(Place instance)"""
             reviewlist = []
-            for key, value in models.storage.all().items():
-                cls = key.split('.')[0]
-                if cls == "Review" and value.place_.id == self.id:
-                    reviewlist.append(value)
-            return (reviewlist)
+            for reviews in models.storage.all(Review).values():
+                if self.id == reviews.place_id:
+                    reviewlist.append(reviews)
+            return reviewlist
