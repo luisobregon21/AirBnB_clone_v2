@@ -3,6 +3,7 @@
 import os
 import models
 from models.review import Review
+from models.amenity import Amenity
 from models.base_model import BaseModel, Base
 from sqlalchemy import ForeignKey, String, Float, Column, Integer, Table
 from sqlalchemy.orm import relationship
@@ -38,8 +39,7 @@ class Place(BaseModel, Base):
         reviews = relationship("Review", backref='place',
                                cascade='all, delete, delete-orphan')
         amenities = relationship("Amenity", secondary='place_amenity',
-                                 viewonly=False,
-                                 cascade='all, delete, delete-orphan')
+                                 viewonly=False)
     else:
         @property
         def reviews(self):
@@ -55,9 +55,14 @@ class Place(BaseModel, Base):
         def amenities(self):
             """return list of Review instances with place_id
             equals to self.id(Place instance)"""
-            reviewlist = []
-            for reviews in models.storage.all(Review).values():
-                if self.id == reviews.place_id:
-                    reviewlist.append(reviews)
-            return reviewlist
+            amenitieslist = []
+            for amenity in models.storage.all(Amenity).values():
+                if amenity.id == self.amenity_ids:
+                    amenitieslist.append(amenity)
+            return amenitieslist
 
+        @amenities.setter
+        def amenities(self, value):
+            """appends id to amenity_ids if value being pass is an Amenity instance"""
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)
