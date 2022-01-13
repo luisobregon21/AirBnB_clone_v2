@@ -15,12 +15,12 @@ from os.path import isdir
 def do_pack():
     """ generates a tgz archive from the contents of web_static """
     try:
-        date = datetime.now().strftime('%Y%m%d%H%M%S')
-        if isdir('versions') is False:
-            # create version folder
-            local('mkdir versions')
-        file_name = f"versions/web_static{date}.tgz"
-        local(f'tar -cvzf {file_name} web_static')
-        return file_name
+        date = datetime.now().strftime("%Y%m%d%H%M%S")
+        # verify if versions directory exists
+        if isdir("versions") is False:
+            local("mkdir versions")
+        name = "versions/web_static_{}.tgz".format(date)
+        local("tar -cvzf {} web_static".format(name))
+        return name
     except:
         return None
