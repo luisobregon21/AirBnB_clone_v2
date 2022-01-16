@@ -24,7 +24,7 @@ def do_deploy(archive_path):
             ''' versions/web_static_2022113185539.tgz '''
             filename = archive_path[9:]
             no_tgz = filename[:-4]
-            final_name = '/data/web_static/releases/' + no_tgz +'/'
+            final_name = '/data/web_static/releases/' + no_tgz + '/'
 
             # creates a directory
             run('mkdir -p ' + final_name)
