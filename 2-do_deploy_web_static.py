@@ -11,6 +11,7 @@ import os
 
 os.environ.hosts = ["34.139.237.184", "3.80.64.94"]
 
+
 def do_deploy(archive_path):
     """ deploys archive to web server"""
 
