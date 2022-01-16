@@ -9,15 +9,12 @@ from fabric.api import run, put
 from os import path
 import os
 
+os.environ.hosts = ["34.139.237.184", "3.80.64.94"]
 
 def do_deploy(archive_path):
     """ deploys archive to web server"""
 
-    os.environ.hosts = ["34.139.237.184", "3.80.64.94"]
-
-    if path.exists(archive_path) is False:
-        return False
-    else:
+    if path.exists(archive_path):
         try:
             # uploads file to given directory
             put(archive_path, '/tmp/')
@@ -32,14 +29,16 @@ def do_deploy(archive_path):
             # Uncompresses the archive
             run('tar -xzf /tmp/' + filename + ' -C ' + final_name)
             # Deletes archive
-            run('rm -rf ' + '/tmp/*.tgz')
+            run('rm -f /tmp/' + filename)
             # moves all uncompressed archive
-            run('mv ' + final_name + '/web_static/*' + final_name)
+            run('mv ' + final_name + '/web_static/* ' + final_name)
             # Deletes symbolic link
-            run('rm -rf ' + '/data/web_static/current')
+            run('rm -rf /data/web_static/current')
             # create a new symbolic link
-            run('ln -s ' + final_name + '/data/web_static/current')
+            run('ln -s ' + final_name + ' /data/web_static/current')
             print('New version deployed!')
             return True
         except:
             return False
+    else:
+        return False
