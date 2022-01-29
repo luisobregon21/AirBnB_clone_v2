@@ -25,8 +25,8 @@ def cities_by_states():
     return render_template('8-cities_by_states.html', states=state_li)
 
 
-app.route('/states', strict_slashes=False)
-app.route('/states/<id>', strict_slashes=False)
+@app.route('/states', strict_slashes=False)
+@app.route('/states/<id>', strict_slashes=False)
 def states(id=None):
     ''' returns list of City objects'''
     state_dic = storage.all(State)
