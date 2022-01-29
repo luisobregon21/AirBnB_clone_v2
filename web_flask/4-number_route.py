@@ -24,9 +24,7 @@ def hbnb():
 @app.route('/c/<text>', strict_slashes=False)
 def c_txt(text):
     ''' prints C followed by value of txt '''
-    if text:
-        text.replace('_', ' ')
-    return "C {}".format(text)
+    return "C {}".format(text.replace('_', ' '))
 
 
 @app.route('/python', strict_slashes=False)
