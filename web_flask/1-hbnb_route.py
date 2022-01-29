@@ -7,10 +7,12 @@ from flask import Flask
 # instance of the class
 app = Flask(__name__)
 
+
 # route to tell what URL should trigger the function
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
     return 'Hello HBNB!'
+
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
