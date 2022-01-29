@@ -13,18 +13,17 @@ from models.review import Review
 import os
 
 
-
-
 class DBStorage:
     ''' Database storage class '''
     __engine = None
     __session = None
     hbnb_classes = {
-        #'BaseModel': BaseModel,
+        'BaseModel': BaseModel,
         'City': City, 'User': User,
         'Place': Place, 'State': State,
-        #'Amenity': Amenity, 'Review': Review
+        'Amenity': Amenity, 'Review': Review
     }
+
     def __init__(self):
         ''' DataBase Storage Constructor '''
         user = os.getenv('HBNB_MYSQL_USER')
