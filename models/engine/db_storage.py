@@ -82,3 +82,7 @@ class DBStorage:
 
         # Is an instanced of the session which can be used to talk to the DB
         self.__session = Session()
+
+    def close(self):
+        if self.__session is not None:
+            self.__session.remove()
