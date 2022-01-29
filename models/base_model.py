@@ -26,8 +26,10 @@ class BaseModel:
         if len(kwargs) > 0:
             try:
                 dt = "%Y-%m-%dT%H:%M:%S.%f"
-                kwargs['created_at'] = datetime.strptime(kwargs["created_at"], dt)
-                kwargs['updated_at'] = datetime.strptime(kwargs["updated_at"], dt)
+                kwargs['created_at'] = datetime.strptime(kwargs["created_at"],
+                                                         dt)
+                kwargs['updated_at'] = datetime.strptime(kwargs["updated_at"],
+                                                         dt)
                 del kwargs['__class__']
             except:
                 pass
