@@ -20,30 +20,17 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        if len(kwargs) == 0:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
-            dt = "%Y-%m-%dT%H:%M:%S.%f"
-            if 'id' not in kwargs:
-                self.id = str(uuid.uuid4())
-
-            if 'created_at' not in kwargs:
-                kwargs['created_at'] = datetime.now()
-            else:
-                kwargs['created_at'] = datetime.strptime(kwargs["created_at"], dt)
-
-            if 'updated_at' not in kwargs:
-                kwargs['updated_at'] = datetime.now()
-            else:
-                kwargs['updated_at'] = datetime.strptime(kwargs["updated_at"], dt)
-
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        if len(kwargs) > 0:
             try:
+                dt = "%Y-%m-%dT%H:%M:%S.%f"
+                kwargs['created_at'] = datetime.strptime(kwargs["created_at"], dt)
+                kwargs['updated_at'] = datetime.strptime(kwargs["updated_at"], dt)
                 del kwargs['__class__']
             except:
                 pass
-
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
