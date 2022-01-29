@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 # route to tell what URL should trigger the function
-@app.route('/states_list', )
+@app.route('/states_list', strict_slashes=False)
 def states_list():
     """ returns a list of all states in the Database """
     state_li = storage.all(State).values()
