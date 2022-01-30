@@ -30,7 +30,7 @@ def cities_by_states():
 def states(id=None):
     ''' returns list of City objects'''
     state_dic = storage.all(State)
-    state = "{}.{}".format('State', id)
+    state = "State.{}".format(id)
     return render_template('9-states.html', states=state_dic,
                            id=id, state_id=state)
 # closes or otherwise deallocates the resource if it exists.
